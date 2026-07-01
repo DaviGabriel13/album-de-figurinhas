@@ -7,6 +7,7 @@ public class Album {
     static String[] selecoes;
     static int[][] matriz;
     static String[] figurinhasFaltantes;
+    static String[] figurinhasRepetidas;
 
     //=======================
     // Metodo de leitura do arquivo
@@ -25,6 +26,7 @@ public class Album {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
 
             int indiceFigurinhasFaltantes=0;
+            int indiceFigurinhasRepetidas=0;
 
 
             // 1ª linha: dimensões
@@ -51,21 +53,13 @@ public class Album {
                     matriz[i][j] = Integer.parseInt(valores[j]);//Converte valores para inteiro
                     if(matriz[i][j]==0){
                         indiceFigurinhasFaltantes++;
+                    }else if(matriz[i][j]>1){
+                        indiceFigurinhasRepetidas++;
                     }
                 }
             }
             figurinhasFaltantes = new String[indiceFigurinhasFaltantes];
-            int contFigurinhas = 0;
-            //Percorrer novamente as figurinhas porém com o intuito de capturar dados de figurinhas faltantes
-            for (int i = 0; i < linhas; i++) {
-                for (int j = 0; j < colunas; j++) {
-                    if(matriz[i][j]==0){
-
-                        figurinhasFaltantes[contFigurinhas] = selecoes[i]+" - "+" Jogador "+ (j+1);
-                        contFigurinhas++;
-                    }
-                }
-            }
+            figurinhasRepetidas = new String[indiceFigurinhasRepetidas];
 
             System.out.println("Álbum carregado com sucesso!");
             System.out.printf("Seleções: %d | Jogadores por seleção: %d%n", linhas, colunas);
@@ -106,8 +100,39 @@ public class Album {
 
     //Ainda existe erro porque não altero o arquivo
     static void listarFigurinhasFaltantes(){
+
+        int contFigurinhas = 0;
+        //Percorrer as figurinhas porém com o intuito de capturar dados de figurinhas faltantes
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                if(matriz[i][j]==0){
+
+                    figurinhasFaltantes[contFigurinhas] = selecoes[i]+" - "+" Jogador "+ (j+1);
+                    contFigurinhas++;
+                }
+            }
+        }
+
         for (int i =0;i<figurinhasFaltantes.length;i++){
             System.out.println(figurinhasFaltantes[i]);
+        }
+    }
+
+    static void listarFigurinhasRepetidas(){
+        int contFigurinhasRepetidas = 0;
+        //Percorrer as figurinhas porém com o intuito de capturar dados de figurinhas faltantes
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                if(matriz[i][j]>1){
+                    int quantidadeRepetidas = matriz[i][j]-1;
+                    figurinhasRepetidas[contFigurinhasRepetidas] = selecoes[i]+" - "+ quantidadeRepetidas+" repetições do jogador "+(j+1) ;
+                    contFigurinhasRepetidas++;
+                }
+            }
+        }
+
+        for (int i =0;i<figurinhasRepetidas.length;i++){
+            System.out.println(figurinhasRepetidas[i]);
         }
     }
 
@@ -199,7 +224,11 @@ public class Album {
                         listarFigurinhasFaltantes();
                     }
                 } else if (codigo ==4) {
-
+                    if (selecoes==null){
+                        System.out.println("O albúm não foi carregado. Carregue o álbum primeiro para depois listar as figurinhas repetidas.");
+                    }else{
+                        listarFigurinhasRepetidas();
+                    }
                 } else if (codigo == 5){
 
                 }else{
