@@ -6,6 +6,7 @@ public class Album {
     static int colunas;
     static String[] selecoes;
     static int[][] matriz;
+    static String[] figurinhasFaltantes;
 
     //=======================
     // Metodo de leitura do arquivo
@@ -23,6 +24,9 @@ public class Album {
     static void carregarAlbum(String caminhoArquivo) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
 
+            int indiceFigurinhasFaltantes=0;
+
+
             // 1ª linha: dimensões
             //Lê uma linha do arquivo com o metodo da classe bufferedReader br e divide strings diferentes utilizando o split
             String[] dimensoes = br.readLine().trim().split("\\s+");
@@ -30,6 +34,7 @@ public class Album {
             colunas = Integer.parseInt(dimensoes[1]); //converte a string para inteiro
 
             selecoes = new String[linhas];
+
             matriz   = new int[linhas][colunas];
 
             // próximas M linhas: nomes das seleções
@@ -44,6 +49,21 @@ public class Album {
                 //Leitura similar à linha 14
                 for (int j = 0; j < colunas; j++) {
                     matriz[i][j] = Integer.parseInt(valores[j]);//Converte valores para inteiro
+                    if(matriz[i][j]==0){
+                        indiceFigurinhasFaltantes++;
+                    }
+                }
+            }
+            figurinhasFaltantes = new String[indiceFigurinhasFaltantes];
+            int contFigurinhas = 0;
+            //Percorrer novamente as figurinhas porém com o intuito de capturar dados de figurinhas faltantes
+            for (int i = 0; i < linhas; i++) {
+                for (int j = 0; j < colunas; j++) {
+                    if(matriz[i][j]==0){
+
+                        figurinhasFaltantes[contFigurinhas] = selecoes[i]+" - "+" Jogador "+ (j+1);
+                        contFigurinhas++;
+                    }
                 }
             }
 
@@ -80,6 +100,14 @@ public class Album {
                 System.out.printf(" %-4d", matriz[i][j]);
             }
             System.out.println();
+        }
+    }
+
+
+    //Ainda existe erro porque não altero o arquivo
+    static void listarFigurinhasFaltantes(){
+        for (int i =0;i<figurinhasFaltantes.length;i++){
+            System.out.println(figurinhasFaltantes[i]);
         }
     }
 
@@ -136,6 +164,7 @@ public class Album {
                     }
 
                     // caminho no meu pc == "Z:\\AlbumTxt\\album.txt"
+                    // caminho no meu notebook = "C:\Users\ferna\Downloads\album.txt"
 
                 } else if (codigo ==2) {
                     if (selecoes==null){
@@ -164,7 +193,11 @@ public class Album {
 
 
                 } else if (codigo==3) {
-
+                    if (selecoes==null){
+                        System.out.println("O albúm não foi carregado. Carregue o álbum primeiro para depois listar as figurinhas faltantes.");
+                    }else{
+                        listarFigurinhasFaltantes();
+                    }
                 } else if (codigo ==4) {
 
                 } else if (codigo == 5){
