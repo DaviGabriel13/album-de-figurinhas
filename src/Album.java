@@ -10,7 +10,7 @@ public class Album {
     //=======================
     // Metodo de leitura do arquivo
     //=======================
-
+    //dasda
     static void cadastrarFigurinha(int selecao, int jogador) {
         if (matriz[selecao][jogador] == 0){
             matriz[selecao][jogador] = 1;
